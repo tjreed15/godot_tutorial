@@ -1,3 +1,13 @@
+# Vars that need to be set on github:
+#   - GODOT_VERSION: Which godot version you are using (ex: 4.3.1)
+#   - BUILD_PATH: Temporary directory to build to (ex: builds)
+#   - EXPORT_NAME: Name of the files to generate for each build
+#   - ITCH_GAME: Name of the Itch.io game to upload build files to
+#   - ITCH_USER: Name of the Itch.io user who owns the game (get this from the URL of the game)
+#   - DISCORD_MESSAGE: String message to send to the discord via the configured webhook
+# Secrets that need to be set on github:
+#  - BUTLER_API_KEY: Your API Key from Itch.io
+#  - DISCORD_WEBHOOK: Your webhook from Discord
 name: "godot-ci export"
 on:
   push:
