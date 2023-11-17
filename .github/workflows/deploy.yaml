@@ -81,7 +81,7 @@ jobs:
           CHANNEL: web
           ITCH_GAME: godot-tutorial
           ITCH_USER: tjreed
-          PACKAGE: project/${{ env.EXPORT_NAME }}/builds/web
+          PACKAGE: builds/web
 
       - name: Notify Discord Channel
         env:
