@@ -81,14 +81,14 @@ jobs:
           CHANNEL: web
           ITCH_GAME: godot-tutorial
           ITCH_USER: tjreed
-          PACKAGE: project/${{ env.EXPORT_NAME }}/build/web
+          PACKAGE: project/${{ env.EXPORT_NAME }}/builds/web
 
       - name: Notify Discord Channel
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.3.0
         with:
-          args: 'A GodotTutorial update is available at https://tj.reed.itch.io/godot-tutorial. Destroy those Creeps!'
+          args: 'A GodotTutorial update is available at https://tjreed.itch.io/godot-tutorial. Destroy those Creeps!'
 
   export-mac:
     name: Mac Export
