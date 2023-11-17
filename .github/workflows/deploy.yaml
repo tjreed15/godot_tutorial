@@ -74,6 +74,21 @@ jobs:
         with:
           name: web
           path: builds/web
+      - name: Publish to itch.io
+        uses: josephbmanley/butler-publish-itchio-action@v1.0.2
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          CHANNEL: web
+          ITCH_GAME: godot-tutorial
+          ITCH_USER: tj.reed
+          PACKAGE: project/${{ env.EXPORT_NAME }}/build/web
+
+      - name: Notify Discord Channel
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.3.0
+        with:
+          args: 'A GodotTutorial update is available at https://tj.reed.itch.io/godot-tutorial. Destroy those Creeps!'
 
   export-mac:
     name: Mac Export
@@ -96,19 +111,3 @@ jobs:
         with:
           name: mac
           path: builds/mac
-
-      - name: Publish to itch.io
-        uses: josephbmanley/butler-publish-itchio-action@v1.0.2
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
-          CHANNEL: web
-          ITCH_GAME: godot-tutorial
-          ITCH_USER: tj.reed
-          PACKAGE: project/${{ env.EXPORT_NAME }}/build/web
-
-      - name: Notify Discord Channel
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@0.3.0
-        with:
-          args: 'A GodotTutorial update is available at https://tj.reed.itch.io/godot-tutorial. Destroy those Creeps!'
