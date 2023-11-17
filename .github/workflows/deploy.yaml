@@ -1,10 +1,4 @@
-name: "godot-ci export"
-on:
-  push:
-    branches: 
-      - main
-
-env:
+variables:
   GODOT_VERSION: 4.1.3
   EXPORT_NAME: Godot-Tutorial
   BUILD_PATH: builds
@@ -12,36 +6,43 @@ env:
   ITCH_GAME: godot-tutorial
   DISCORD_MESSAGE: 'A GodotTutorial update is available at https://tjreed.itch.io/godot-tutorial. Destroy those Creeps!'
 
+
+name: "godot-ci export"
+on:
+  push:
+    branches: 
+      - main
+
 jobs:
   export-windows:
     name: Windows Export
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:4.1.3
+      image: barichello/godot-ci:${{ variables.GODOT_VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mv /root/.local/share/godot/export_templates/${{ variables.GODOT_VERSION }}.stable ~/.local/share/godot/export_templates/${{ variables.GODOT_VERSION }}.stable
       - name: Windows Build
         run: |
-          mkdir -v -p ${BUILD_PATH}/windows
-          godot --headless -v --export-release "Windows Desktop" ${BUILD_PATH}/windows/$EXPORT_NAME.exe
+          mkdir -v -p ${{BUILD_PATH }}/windows
+          godot --headless -v --export-release "Windows Desktop" ${{ variables.BUILD_PATH }}/windows/${{ variables.EXPORT_NAME }}.exe
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
           name: windows
-          path: ${BUILD_PATH}/windows
+          path: ${{ variables.BUILD_PATH }}/windows
       - name: Publish to itch.io
         uses: manleydev/butler-publish-itchio-action@master
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
           CHANNEL: windows
-          ITCH_GAME: ${ITCH_GAME}
-          ITCH_USER: ${ITCH_USER}
-          PACKAGE: ${BUILD_PATH}/windows
+          ITCH_GAME: ${{ variables.ITCH_GAME }}
+          ITCH_USER: ${{ variables.ITCH_USER }}
+          PACKAGE: ${{ variables.BUILD_PATH }}/windows
 
   export-linux:
     name: Linux Export
@@ -54,24 +55,24 @@ jobs:
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mv /root/.local/share/godot/export_templates/${{ variables.GODOT_VERSION }}.stable ~/.local/share/godot/export_templates/${{ variables.GODOT_VERSION }}.stable
       - name: Linux Build
         run: |
-          mkdir -v -p ${BUILD_PATH}/linux
-          godot --headless -v --export-release "Linux/X11" ${BUILD_PATH}/linux/$EXPORT_NAME.x86_64
+          mkdir -v -p ${{ variables.BUILD_PATH }}/linux
+          godot --headless -v --export-release "Linux/X11" ${{ variables.BUILD_PATH }}/linux/${{ variables.EXPORT_NAME }}.x86_64
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
           name: linux
-          path: ${BUILD_PATH}/linux
+          path: ${{ variables.BUILD_PATH }}/linux
       - name: Publish to itch.io
         uses: manleydev/butler-publish-itchio-action@master
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
           CHANNEL: linux
-          ITCH_GAME: ${ITCH_GAME}
-          ITCH_USER: ${ITCH_USER}
-          PACKAGE: ${BUILD_PATH}/linux
+          ITCH_GAME: ${{ variables.ITCH_GAME }}
+          ITCH_USER: ${{ variables.ITCH_USER }}
+          PACKAGE: ${{ variables.BUILD_PATH }}/linux
 
   export-mac:
     name: Mac Export
@@ -84,25 +85,25 @@ jobs:
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mv /root/.local/share/godot/export_templates/${{ variables.GODOT_VERSION }}.stable ~/.local/share/godot/export_templates/${{ variables.GODOT_VERSION }}.stable
       - name: Mac Build
         run: |
-          mkdir -v -p ${BUILD_PATH}/mac
-          godot --headless -v --export-release "macOS" ${BUILD_PATH}/mac/$EXPORT_NAME.zip
+          mkdir -v -p ${{ variables.BUILD_PATH }}/mac
+          godot --headless -v --export-release "macOS" ${{ variables.BUILD_PATH }}/mac/${{ variables.EXPORT_NAME }}.zip
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
           name: mac
-          path: ${BUILD_PATH}/mac
+          path: ${{ variables.BUILD_PATH }}/mac
 
       - name: Publish to itch.io
         uses: manleydev/butler-publish-itchio-action@master
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
           CHANNEL: mac
-          ITCH_GAME: ${ITCH_GAME}
-          ITCH_USER: ${ITCH_USER}
-          PACKAGE: ${BUILD_PATH}/mac
+          ITCH_GAME: ${{ variables.ITCH_GAME }}
+          ITCH_USER: ${{ variables.ITCH_USER }}
+          PACKAGE: ${{ variables.BUILD_PATH }}/mac
 
   export-web:
     name: Web Export
@@ -115,28 +116,28 @@ jobs:
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mv /root/.local/share/godot/export_templates/${{ variables.GODOT_VERSION }}.stable ~/.local/share/godot/export_templates/${{ variables.GODOT_VERSION }}.stable
       - name: Web Build
         run: |
-          mkdir -v -p ${BUILD_PATH}/web
-          godot --headless -v --export-release "HTML5" ${BUILD_PATH}/web/index.html
+          mkdir -v -p ${{ variables.BUILD_PATH }}/web
+          godot --headless -v --export-release "HTML5" ${{ variables.BUILD_PATH }}/web/index.html
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
           name: web
-          path: ${BUILD_PATH}/web
+          path: ${{ variables.BUILD_PATH }}/web
       - name: Publish to itch.io
         uses: manleydev/butler-publish-itchio-action@master
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
           CHANNEL: web
-          ITCH_GAME: ${ITCH_GAME}
-          ITCH_USER: ${ITCH_USER}
-          PACKAGE: ${BUILD_PATH}/web
+          ITCH_GAME: ${{ variables.ITCH_GAME }}
+          ITCH_USER: ${{ variables.ITCH_USER }}
+          PACKAGE: ${{ variables.BUILD_PATH }}/web
 
       - name: Notify Discord Channel
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ variables.{}  secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.3.0
         with:
-          args: ${DISCORD_MESSAGE}
+          args: ${{ variables.DISCORD_MESSAGE }}
