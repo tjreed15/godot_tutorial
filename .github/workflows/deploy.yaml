@@ -81,7 +81,7 @@ jobs:
           CHANNEL: web
           ITCH_GAME: godot-tutorial
           ITCH_USER: tjreed
-          PACKAGE: builds/web
+          PACKAGE: project/${{ env.EXPORT_NAME }}/builds/web
 
       - name: Notify Discord Channel
         env:
@@ -111,3 +111,12 @@ jobs:
         with:
           name: mac
           path: builds/mac
+
+      - name: Publish to itch.io
+        uses: manleydev/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          CHANNEL: mac
+          ITCH_GAME: godot-tutorial
+          ITCH_USER: tjreed
+          PACKAGE: project/${{ env.EXPORT_NAME }}/builds/mac
