@@ -105,7 +105,7 @@ jobs:
       - name: Mac Build
         run: |
           mkdir -v -p builds/mac
-          godot --headless -v --export-release "Mac OSX" builds/mac/$EXPORT_NAME.zip
+          godot --headless -v --export-release "macOS" builds/mac/$EXPORT_NAME.zip
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
