@@ -80,7 +80,7 @@ jobs:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
           CHANNEL: web
           ITCH_GAME: godot-tutorial
-          ITCH_USER: tj.reed
+          ITCH_USER: tjreed
           PACKAGE: project/${{ env.EXPORT_NAME }}/build/web
 
       - name: Notify Discord Channel
